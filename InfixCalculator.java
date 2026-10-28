@@ -57,12 +57,15 @@ public class InfixCalculator {
         for (String token : tokens) {
             int prec = precedence(token);
             if (prec == 0) {
+                if (token.equals(")") {
+                    while (!stack.peek().equals("(")) {
+                        output.append(stack.peek()); stack.pop();
+                    }
+                }
                 stack.push(token);
             }
-            else if (token.equals(")")) {
-                while (!stack.peek().equals("(")) {
-                    output.append(stack.peek()); stack.pop();
-                }
+            else ) {
+
                 output.
             }
         }
