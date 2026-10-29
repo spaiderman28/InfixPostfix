@@ -57,21 +57,27 @@ public class InfixCalculator {
         for (String token : tokens) {
             int prec = precedence(token);
             if (prec == 0) {
-                if (token.equals(")") {
+                if (token.equals(")")) {
                     while (!stack.peek().equals("(")) {
-                        output.append(stack.peek()); stack.pop();
+                        output.append(stack.pop() + " ");
                     }
+                    stack.pop();
+                } 
+                else if (token.equals("(")) stack.push(token);
+                else output.append(token + " ");
+            }
+            else  {
+                while (!stack.isEmpty() && precedence(stack.peek()) >= prec) {
+                    output.append(stack.pop() + " "); 
                 }
                 stack.push(token);
-            }
-            else ) {
-
-                output.
             }
         }
 
         // TODO: pop any remaining operators from the stack to output
-
+        while (!stack.isEmpty()) {
+            output.append(stack.pop() + " ");
+        }
         return output.toString().trim();
     }
 
@@ -98,7 +104,31 @@ public class InfixCalculator {
     public static int evaluatePostfix(String postfix) {
         // *** PASTE YOUR COMPLETED METHOD BODY FROM LAST WEEK HERE ***
         // TODO: implement postfix evaluation using a Stack<Integer>
-        return 0; // placeholder — remove when implemented
+        Stack<Integer> a = new Stack<>();
+        String[] tokens = postfix.split(" ");
+
+        for (int i = 0; i < tokens.length; i++) {
+            if (tokens[i].equals("+")) {
+                int right = a.pop();
+                int left = a.pop();
+                a.push(left + right);
+            } else if (tokens[i].equals("-")) {
+                int right = a.pop();
+                int left = a.pop();
+                a.push(left - right);
+            } else if (tokens[i].equals("*")) {
+                int right = a.pop();
+                int left = a.pop();
+                a.push(left * right);
+            } else if (tokens[i].equals("/")) {
+                int right = a.pop();
+                int left = a.pop();
+                a.push(left / right);
+            } else {
+                a.push(Integer.parseInt(tokens[i]));
+            }
+        }
+        return a.pop();
     }
 
     // ================================================================

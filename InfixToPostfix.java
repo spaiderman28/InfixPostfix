@@ -72,8 +72,32 @@ public class InfixToPostfix {
     public static String convert(String infix) {
         Stack<String> stack = new Stack<>();
         StringBuilder output = new StringBuilder();
+        String[] tokens = infix.split(" ");
 
+        for (String token : tokens) {
+            int prec = precedence(token);
+            if (prec == 0) {
+                if (token.equals(")")) {
+                    while (!stack.peek().equals("(")) {
+                        output.append(stack.pop() + " ");
+                    }
+                    stack.pop();
+                } 
+                else if (token.equals("(")) stack.push(token);
+                else output.append(token + " ");
+            }
+            else  {
+                while (!stack.isEmpty() && precedence(stack.peek()) >= prec) {
+                    output.append(stack.pop() + " "); 
+                }
+                stack.push(token);
+            }
+        }
 
+        // TODO: pop any remaining operators from the stack to output
+        while (!stack.isEmpty()) {
+            output.append(stack.pop() + " ");
+        }
         return output.toString().trim();
     }
 
